@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <SDL3/SDL.h>
+#include "renderer.hpp"
 
 #define _DEFER_CONCAT(a, b) a##b
 #define DEFER_CONCAT(a, b) _DEFER_CONCAT(a, b)
@@ -19,24 +20,11 @@ int main() {
     
     defer(SDL_Quit());
     
-
-    SDL_Window *win = SDL_CreateWindow("chat", 800, 600, SDL_WINDOW_RESIZABLE);
-
-    if (!win)
+    Renderer r;
+    if (!r.create("chat", 800, 600)) {
+        printf("Failed to create renderer\n");
         return 1;
-        
-    defer(SDL_DestroyWindow(win));
-
-    SDL_Renderer *r = SDL_CreateRenderer(win, NULL);
-    
-    if (!r)
-        return 1;
-
-    defer(SDL_DestroyRenderer(r));
-
-    SDL_SetRenderDrawColor(r, 0, 0, 0, 255);
-    SDL_RenderClear(r);
-    SDL_RenderPresent(r);
+    }
     
     SDL_Event e;
     bool running = true;
@@ -57,6 +45,10 @@ int main() {
                 break;
             }
         }
+
+        r.start_frame();
+        r.draw(Rect(0, 0, 100, 100));
+        r.end_frame();
 
         SDL_Delay(16);
     }
