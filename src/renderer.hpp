@@ -7,36 +7,19 @@ struct Rect {
     int x, y, width, height;
 };
 
+struct Colour {
+    Colour(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
+        : r(r), g(g), b(b), a(a) {}
+    
+    uint8_t r, g, b, a;
+};
+
 struct Renderer {
-    bool create(const char *title, int w, int h) {
-        _win = SDL_CreateWindow(title, w, h, SDL_WINDOW_RESIZABLE);
-        if (!_win) return false;
+    bool create(const char *title, int w, int h);
+    void draw(Rect r, Colour c);
+    void start_frame(Colour c = Colour(30, 30, 30, 255));
+    void end_frame();
 
-        _r = SDL_CreateRenderer(_win, nullptr);
-        if (!_r) {
-            SDL_DestroyWindow(_win);
-            return false;
-        }
-
-        return true;
-    }
-
-    void draw(Rect r) {
-        SDL_Rect sr = {.x = r.x, .y = r.y, .w = r.width, .h = r.height};
-        SDL_FRect sf;
-        SDL_RectToFRect(&sr, &sf);
-        SDL_SetRenderDrawColor(_r, 200, 50, 50, 255);
-        SDL_RenderFillRect(_r, &sf);
-    }
-
-    void start_frame() {
-        SDL_SetRenderDrawColor(_r, 30, 30, 30, 255);
-        SDL_RenderClear(_r);
-    }
-
-    void end_frame() {
-        SDL_RenderPresent(_r);
-    }
 private:
     SDL_Window *_win = nullptr;
     SDL_Renderer *_r = nullptr;

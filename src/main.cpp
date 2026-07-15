@@ -47,7 +47,7 @@ int main() {
         }
 
         r.start_frame();
-        r.draw(Rect(0, 0, 100, 100));
+        r.draw(Rect(0, 0, 100, 100), Colour(200, 50, 50, 255));
         r.end_frame();
 
         SDL_Delay(16);
